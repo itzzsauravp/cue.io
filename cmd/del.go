@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/itzzsauravp/go-rem/helpers"
 	"github.com/itzzsauravp/go-rem/types"
 	"github.com/spf13/cobra"
@@ -19,7 +17,6 @@ var DeleteCmd = &cobra.Command{
 	ValidArgs: []cobra.Completion{"all"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 1 && args[0] == "all" {
-			fmt.Println("Deleting all your reminders")
 			helpers.DeleteAllReminders()
 		} else {
 			query := types.QueryDel{

@@ -32,6 +32,8 @@ go.work.sum
 # .vscode/
 
 main
-lockin-linux
-lockin-darwin
-lockin.exe
+cue
+cue-linux
+cue-darwin
+cue.exe
+.excalidraw

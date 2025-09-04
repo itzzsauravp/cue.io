@@ -18,6 +18,7 @@ func DeleteAllReminders() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error while clearing the contents of file @ `%s`: %v", setup.FILE_PATH, err)
 	}
+	fmt.Fprint(os.Stdout, "All Reminder Deleted")
 }
 
 func DeleteReminder(query types.QueryDel) {

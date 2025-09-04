@@ -33,6 +33,12 @@ func SaveReminders(reminders []types.Reminder) error {
 }
 
 func DisplayReminders(reminders []types.Reminder, query *types.Query) error {
+
+	if len(reminders) == 0 {
+		fmt.Fprintln(os.Stdout, "\nNo reminders found\n\nPlease check", ColorCyan("cue --help"), "or", ColorCyan("cue add --help"))
+		return nil
+	}
+
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
 	fmt.Fprintln(w, "ID\tName\tDuration\tIsRecursive\tIsActive")
 
