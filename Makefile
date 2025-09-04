@@ -2,6 +2,8 @@ BINARY_NAME = cue
 BUILD_DIR = .
 INSTALL_DIR = /usr/local/bin
 CONFIG_DIR = $(HOME)/.config/cue
+ASSET_IMAGE = CUE.jpg
+ASSETS_DIR = $(CONFIG_DIR)/assets
 FILE = $(CONFIG_DIR)/reminders.json
 
 .PHONY = all build install setup clean
@@ -13,6 +15,8 @@ build:
 
 install: build
 	sudo ln -sf $(PWD)/$(BINARY_NAME) $(INSTALL_DIR)/$(BINARY_NAME)
+	mkdir -p $(ASSETS_DIR)
+	sudo ln -sf $(PWD)/assets/$(ASSET_IMAGE) $(ASSETS_DIR)/$(ASSET_IMAGE)
 	@echo "Installed $(BINARY_NAME) to $(INSTALL_DIR)"
 
 # init: 
