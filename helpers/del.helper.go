@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/itzzsauravp/go-rem/internal/setup"
-	"github.com/itzzsauravp/go-rem/types"
+	"github.com/itzzsauravp/cue.io/internal/setup"
+	"github.com/itzzsauravp/cue.io/types"
 )
 
 func DeleteAllReminders() {
@@ -18,7 +18,7 @@ func DeleteAllReminders() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error while clearing the contents of file @ `%s`: %v", setup.FILE_PATH, err)
 	}
-	fmt.Fprint(os.Stdout, "All Reminder Deleted")
+	fmt.Fprint(os.Stdout, "All Reminder Deleted\n")
 }
 
 func DeleteReminder(query types.QueryDel) {
@@ -54,5 +54,5 @@ func DeleteReminder(query types.QueryDel) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error while writing to the reminders file: %v", err)
 	}
-	fmt.Fprint(os.Stdout, "Reminder Deleted")
+	fmt.Fprint(os.Stdout, "Reminder Deleted\n")
 }

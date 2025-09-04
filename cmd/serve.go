@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/itzzsauravp/go-rem/helpers"
-	"github.com/itzzsauravp/go-rem/utils"
+	"github.com/itzzsauravp/cue.io/helpers"
+	"github.com/itzzsauravp/cue.io/utils"
 	"github.com/spf13/cobra"
 )
 

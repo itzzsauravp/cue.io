@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/itzzsauravp/go-rem/constants"
-	"github.com/itzzsauravp/go-rem/helpers"
-	"github.com/itzzsauravp/go-rem/internal/setup"
+	"github.com/itzzsauravp/cue.io/constants"
+	"github.com/itzzsauravp/cue.io/helpers"
+	"github.com/itzzsauravp/cue.io/internal/setup"
 	"github.com/spf13/cobra"
 )
 
@@ -42,7 +42,7 @@ var RootCmd = &cobra.Command{
 		helpers.PreRun(setup.FILE_PATH)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Usage()
+		fmt.Println(cmd.Long)
 	},
 }
 

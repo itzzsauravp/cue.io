@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/itzzsauravp/go-rem/constants"
+	"github.com/itzzsauravp/cue.io/constants"
 	"github.com/spf13/cobra"
 )
 

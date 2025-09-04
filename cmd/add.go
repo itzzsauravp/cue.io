@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/itzzsauravp/go-rem/helpers"
-	"github.com/itzzsauravp/go-rem/types"
+	"github.com/itzzsauravp/cue.io/helpers"
+	"github.com/itzzsauravp/cue.io/types"
 	"github.com/spf13/cobra"
 )
 

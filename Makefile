@@ -9,15 +9,18 @@ FILE = $(CONFIG_DIR)/reminders.json
 .PHONY = all build install setup clean
 
 all: setup
+	@echo ""
 
 build:
 	go build -o $(BINARY_NAME) $(BUILD_DIR)/main.go
+	@echo ""
 
 install: build
 	sudo ln -sf $(PWD)/$(BINARY_NAME) $(INSTALL_DIR)/$(BINARY_NAME)
 	mkdir -p $(ASSETS_DIR)
 	sudo ln -sf $(PWD)/assets/$(ASSET_IMAGE) $(ASSETS_DIR)/$(ASSET_IMAGE)
 	@echo "Installed $(BINARY_NAME) to $(INSTALL_DIR)"
+	@echo ""
 
 # init: 
 # 	mkdir -p $(CONFIG_DIR)
@@ -25,7 +28,9 @@ install: build
 # 	@echo "Initialized file at $(CONFIG_DIR)"
 
 setup: build install
-	@echo "Setup completed! You can now run `$(BINARY_NAME)` from anywhere."
+	@echo "Setup completed! You can now run cue from anywhere."
+	@echo ""
+	@echo "Please start with cue install-service followed by cue run to start using cue"
 
 clean: 
 	rm -rf $(BINARY_NAME)

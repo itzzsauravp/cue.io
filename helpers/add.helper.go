@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/itzzsauravp/go-rem/types"
+	"github.com/itzzsauravp/cue.io/types"
 )
 
 func AddReminder(rem *types.Reminder) {

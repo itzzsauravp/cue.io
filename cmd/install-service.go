@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/itzzsauravp/go-rem/helpers"
+	"github.com/itzzsauravp/cue.io/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -28,8 +28,6 @@ var InstallServiceCmd = &cobra.Command{
 		}
 		servicePath := filepath.Join(os.Getenv("HOME"), ".config/systemd/user/cue.service")
 		os.MkdirAll(filepath.Dir(servicePath), 0755)
-		fmt.Println("This is the absolute path for the binary:", exe)
-		fmt.Println("This is the path for the service:", servicePath)
 
 		unit := fmt.Sprintf(`[Unit]
 Description=cue Reminder Daemon
@@ -41,7 +39,6 @@ Restart=always
 [Install]
 WantedBy=default.target
 `, exe)
-		fmt.Println("This is the content of the service file", unit)
 		err = os.WriteFile(servicePath, []byte(unit), 0644)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to write service file: %v\n", err)

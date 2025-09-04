@@ -6,7 +6,6 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/itzzsauravp/go-rem/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +18,7 @@ var RunCmd = &cobra.Command{
 			return
 		}
 		exec.Command("systemctl", "--user", "start", "cue").Run()
-		fmt.Printf("\n%s\n", fmt.Sprintf("Executed command %s...\n", helpers.ColorGreen("systemctl --user start cue")))
+		fmt.Println("cue is now running in the backgroud...")
 
 	},
 }

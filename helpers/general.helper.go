@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 	"text/tabwriter"
 
-	"github.com/itzzsauravp/go-rem/internal/setup"
-	"github.com/itzzsauravp/go-rem/types"
+	"github.com/itzzsauravp/cue.io/internal/setup"
+	"github.com/itzzsauravp/cue.io/types"
 )
 
 func LoadReminders() ([]types.Reminder, error) {
@@ -35,7 +36,7 @@ func SaveReminders(reminders []types.Reminder) error {
 func DisplayReminders(reminders []types.Reminder, query *types.Query) error {
 
 	if len(reminders) == 0 {
-		fmt.Fprintln(os.Stdout, "\nNo reminders found\n\nPlease check", ColorCyan("cue --help"), "or", ColorCyan("cue add --help"))
+		fmt.Fprintln(os.Stdout, "No reminders found\nPlease check", ColorCyan("cue --help"), "or", ColorCyan("cue add --help"))
 		return nil
 	}
 
@@ -60,4 +61,14 @@ func DisplayReminders(reminders []types.Reminder, query *types.Query) error {
 			reminder.IsRecursive, ColorIsActive(reminder.IsActive))
 	}
 	return w.Flush()
+}
+
+func IsWSL() bool {
+	data, err := os.ReadFile("/proc/version")
+	if err != nil {
+		return false
+	}
+	version := strings.ToLower(string(data))
+	fmt.Println(version)
+	return strings.Contains(version, "microsoft")
 }

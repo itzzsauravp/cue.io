@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/itzzsauravp/go-rem/internal/setup"
+	"github.com/itzzsauravp/cue.io/internal/setup"
 )
 
 func PreRun(filePath string) {

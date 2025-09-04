@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/itzzsauravp/go-rem/cmd"
+	"github.com/itzzsauravp/cue.io/cmd"
 )
 
 func main() {

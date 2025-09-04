@@ -9,19 +9,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var StopCmd = &cobra.Command{
-	Use:   "stop",
+var StatusCmd = &cobra.Command{
+	Use:   "status",
 	Short: "Stop the reminder service",
 	Run: func(cmd *cobra.Command, args []string) {
 		if runtime.GOOS != "linux" {
 			fmt.Fprint(os.Stderr, "Error while stopping cue.service")
 			return
 		}
-		exec.Command("systemctl", "--user", "stop", "cue").Run()
-		fmt.Println("cue service has been stopped")
+		b, err := exec.Command("systemctl", "--user", "status", "cue").Output()
+		if err != nil {
+			fmt.Fprint(os.Stderr, "Error while reading status for cue.service")
+			return
+		}
+		fmt.Println(string(b))
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(StopCmd)
+	RootCmd.AddCommand(StatusCmd)
 }
