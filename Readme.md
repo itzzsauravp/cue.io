@@ -34,29 +34,13 @@ Visit github.com/itzzsauravp/cue.io to view more details or contribute to it
 
 ```
 
-```text
-Usage:
-  cue [flags]
-  cue [command]
+### Demo - Windows
 
-Available Commands:
-  add             Add reminder
-  completion      Generate the autocompletion script for the specified shell
-  del             Delete reminder
-  help            Help about any command
-  install-service Install cue as a Linux systemd user service
-  list            List reminder
-  logs            Shows live logs for cue
-  run             Start the reminder service
-  serve           Run the daemon in background
-  status          Stop the reminder service
-  stop            Stop the reminder service
+![demo-windows](./assets/readme/demo_win.png)
 
-Flags:
-  -h, --help   help for cue
+### Demo - Linux
 
-Use "cue [command] --help" for more information about a command.
-```
+![demo-linux](./assets/readme/demo_linux.png)
 
 ## Features
 
@@ -93,6 +77,14 @@ sudo dnf update && sudo dnf install libnotify
 # Arch
 sudo pacman -Syu && sudo pacman -S libnotify
 ```
+
+If you’re using a lightweight window manager like **i3** or **bspwm**, make sure you have a **notification daemon** installed that works with `libnotify`.
+
+A popular and lightweight option is **`dunst`**. You can install it using your distro’s package manager:
+
+- **Debian/Ubuntu:** `sudo apt install dunst`
+- **Fedora:** `sudo dnf install dunst`
+- **Arch/Manjaro:** `sudo pacman -S dunst`
 
 ### For WSL:
 
