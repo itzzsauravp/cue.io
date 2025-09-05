@@ -46,7 +46,7 @@ func Notify(reminder types.Reminder) {
 		} else {
 			fmt.Println("This is running on LINUX")
 			imagePath := fmt.Sprintf("%s%s", home, constants.NOTIFICATION_ICON_PATH)
-			err = beeep.Notify(fmt.Sprintf("Hey %s\nCue Reminder", username), reminder.Name, imagePath)
+			err = beeep.Notify(fmt.Sprintf("Hey %s\n", username), reminder.Name, imagePath)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "failed to send notification: %v", err)
 			}
