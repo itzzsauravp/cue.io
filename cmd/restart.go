@@ -3,26 +3,27 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"runtime"
 
+	"github.com/itzzsauravp/cue.io/helpers"
 	"github.com/spf13/cobra"
 )
 
-var RunCmd = &cobra.Command{
-	Use:   "run",
-	Short: "Start the reminder service",
+var RestartCmd = &cobra.Command{
+	Use:    "restart",
+	Hidden: true,
+	Short:  "Restarts the reminder service",
 	Run: func(cmd *cobra.Command, args []string) {
 		if runtime.GOOS != "linux" {
 			fmt.Fprint(os.Stderr, "This install-service currently only supports Linux.")
 			return
 		}
-		exec.Command("systemctl", "--user", "start", "cue").Run()
-		fmt.Println("cue is now running in the backgroud...")
+		helpers.RestartDaemon()
+		fmt.Println("cue service restarted")
 
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(RunCmd)
+	RootCmd.AddCommand(RestartCmd)
 }

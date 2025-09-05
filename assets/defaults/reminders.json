@@ -1,0 +1,9 @@
+[
+  {
+    "rem_id": 1,
+    "name": "Welcome to CUE!\nNever forget a reminder again.\nVisit github.com/itzzsauravp/cue.io",
+    "duration": 1000000000,
+    "isRecursive": false,
+    "isActive": true
+  }
+]

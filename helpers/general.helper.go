@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 	"text/tabwriter"
 
@@ -69,6 +70,10 @@ func IsWSL() bool {
 		return false
 	}
 	version := strings.ToLower(string(data))
-	fmt.Println(version)
 	return strings.Contains(version, "microsoft")
+}
+
+func RestartDaemon() {
+	exec.Command("systemctl", "--user", "stop", "cue").Run()
+	exec.Command("systemctl", "--user", "start", "cue").Run()
 }

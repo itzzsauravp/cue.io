@@ -15,27 +15,37 @@ import (
 
 func Notify(reminder types.Reminder) {
 
+	var username string
 	home, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to get user home directory: %v", err)
 		return
 	}
-	user, _ := user.Current()
-	var username string = "user"
-	if user.Name != "" {
-		username = user.Name
+	user, err := user.Current()
+	username = user.Username
+	if err != nil {
+		username = "User"
 	}
-	fmt.Println("User:", username)
-	fmt.Println("User:", runtime.GOOS)
 	switch runtime.GOOS {
 	case "linux":
 		if helpers.IsWSL() {
-			cmd := exec.Command("notify-send", `"Hello There"`)
-			fmt.Println(cmd.String())
-			cmd.Env = append(cmd.Env, os.Environ()...)
-			cmd.Run()
+			fmt.Println("\nThis is running on WSL")
+			cmd := exec.Command(
+				"/mnt/c/Program Files/wsl-win/wsl-notify-send.exe",
+				"--icon", constants.NOTIFICATION_ICON_PATH_WIN,
+				"--category", fmt.Sprintf("Hey %s", username),
+				"--appId", constants.APP_ID,
+				"--expire-time", "-1",
+				reminder.Name,
+			)
+			fmt.Println(cmd)
+			err := cmd.Run()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "There was an error executing the command: %v", err)
+			}
 		} else {
-			imagePath := fmt.Sprintf("%s/.config/cue/assets/%s", home, constants.NOTIFICATION_ICON)
+			fmt.Println("This is running on LINUX")
+			imagePath := fmt.Sprintf("%s%s", home, constants.NOTIFICATION_ICON_PATH)
 			err = beeep.Notify(fmt.Sprintf("Hey %s\nCue Reminder", username), reminder.Name, imagePath)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "failed to send notification: %v", err)

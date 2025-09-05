@@ -4,6 +4,6 @@ const (
 	ROOT_CMD                   = "cue"
 	APP_ID                     = "cue.io"
 	NOTIFICATION_ICON_PATH     = "/.config/cue/assets/CUE.jpg"
-	NOTIFICATION_ICON_PATH_WIN = "C:\\Users\\gamef\\AppData\\Roaming\\cue\\CUE_WIN.png"
+	NOTIFICATION_ICON_PATH_WIN = "C:\\Users\\{{USERNAME}}\\AppData\\Roaming\\cue\\CUE_WIN.png"
 	WSL_NOTIFY_SEND_PATH       = "/mnt/c/Program Files/wsl-win/wsl-notify-send.exe"
 )

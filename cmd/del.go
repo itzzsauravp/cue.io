@@ -25,6 +25,7 @@ var DeleteCmd = &cobra.Command{
 				IsRecursive: del_recursive,
 			}
 			helpers.DeleteReminder(query)
+			helpers.RestartDaemon()
 		}
 	},
 }

@@ -33,6 +33,7 @@ var AddCmd = &cobra.Command{
 			IsActive:    add_active,
 		}
 		helpers.AddReminder(&rem)
+		helpers.RestartDaemon()
 	},
 }
 

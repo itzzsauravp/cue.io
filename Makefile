@@ -1,42 +1,97 @@
-BINARY_NAME = cue
-BUILD_DIR = .
-INSTALL_DIR = /usr/local/bin
-CONFIG_DIR = $(HOME)/.config/cue
-ASSET_IMAGE = CUE.jpg
-ASSETS_DIR = $(CONFIG_DIR)/assets
-FILE = $(CONFIG_DIR)/reminders.json
+BINARY_NAME        := cue
+BUILD_DIR          := .
+INSTALL_DIR        := /usr/local/bin
+CONFIG_DIR_LINUX   := $(HOME)/.config/cue
+USER_SERVICE_DIR   := $(HOME)/.config/systemd/user
+ASSETS_DIR         := $(CONFIG_DIR_LINUX)/assets
+DEFAULT_FILE       := reminders.json
+IMAGE_LINUX        := CUE.jpg
+IMAGE_WINDOWS      := CUE_WIN.png
+SERVICE_TEMPLATE   := $(PWD)/assets/services/cue.service.in
+SERVICE_FILE       := $(PWD)/assets/services/cue.service
+CONSTANT_TEMPATE := $(PWD)/constants/constants.go.in
+CONSTANT_FILE := $(PWD)/constants/constants.go
 
-.PHONY = all build install setup clean
+.PHONY: all build install init setup service clean check_win_user wsl
 
+# for pure linux
 all: setup
-	@echo ""
 
-build:
+# for wsl
+wsl: check_win_user build install init service 
+
+# Check Windows Username ( and also add config folders )
+check_win_user:
+	@WIN_USERNAME_POWERSHELL=$$(powershell.exe -Command "[Environment]::UserName" | tr -d '\r'); \
+	CONFIG_DIR_WINDOWS="/mnt/c/Users/$$WIN_USERNAME_POWERSHELL/AppData/Roaming/cue"; \
+	sudo mkdir -p "$$CONFIG_DIR_WINDOWS"; \
+	\
+	read -p "Enter your Windows username: " WIN_USER_INPUT; \
+	if [ "$$WIN_USER_INPUT" != "$$WIN_USERNAME_POWERSHELL" ]; then \
+		echo "Error: Input username ($$WIN_USER_INPUT) does not match detected username ($$WIN_USERNAME_POWERSHELL)"; \
+		exit 1; \
+	else \
+		echo "Windows username verified: $$WIN_USER_INPUT"; \
+		echo "Windows username detected: $$WIN_USERNAME_POWERSHELL"; \
+		sed "s|{{USERNAME}}|$$WIN_USERNAME_POWERSHELL|g" $(CONSTANT_TEMPATE) > $(CONSTANT_FILE); \
+		sudo mkdir -p "$$CONFIG_DIR_WINDOWS"; \
+		cp -a $(PWD)/assets/defaults/$(IMAGE_WINDOWS) "$$CONFIG_DIR_WINDOWS/$(IMAGE_WINDOWS)"; \
+		echo "Initialized Windows config at $$CONFIG_DIR_WINDOWS"; \
+	fi
+
+
+# Build the Go Binary
+build: 
+	@echo "Building $(BINARY_NAME)..."
 	go build -o $(BINARY_NAME) $(BUILD_DIR)/main.go
+	@echo "Build complete."
 	@echo ""
 
-install: build
+# Install Binary and Assets
+install:
+	@echo "Installing $(BINARY_NAME)..."
 	sudo ln -sf $(PWD)/$(BINARY_NAME) $(INSTALL_DIR)/$(BINARY_NAME)
 	mkdir -p $(ASSETS_DIR)
-	sudo ln -sf $(PWD)/assets/$(ASSET_IMAGE) $(ASSETS_DIR)/$(ASSET_IMAGE)
+	cp -a $(PWD)/assets/defaults/$(IMAGE_LINUX) $(ASSETS_DIR)/$(IMAGE_LINUX)
 	@echo "Installed $(BINARY_NAME) to $(INSTALL_DIR)"
 	@echo ""
 
-# init: 
-# 	mkdir -p $(CONFIG_DIR)
-# 	touch $(FILE)
-# 	@echo "Initialized file at $(CONFIG_DIR)"
-
-setup: build install
-	@echo "Setup completed! You can now run cue from anywhere."
+# Initialize Configuration
+init:
+	@echo "Initializing configuration..."
+	mkdir -p $(CONFIG_DIR_LINUX)
+	cp $(PWD)/assets/defaults/$(DEFAULT_FILE) $(CONFIG_DIR_LINUX)/$(DEFAULT_FILE)
+	@echo "Initialized Linux config at $(CONFIG_DIR_LINUX)"
+	@echo "Copied default reminders to $(CONFIG_DIR_LINUX)/$(DEFAULT_FILE)"
 	@echo ""
-	@echo "Please start with cue install-service followed by cue run to start using cue"
 
-clean: 
+# Install and Start User Service
+service:
+	@echo "Installing systemd service..."
+	mkdir -p $(USER_SERVICE_DIR)
+	sed "s|{{BINARY_PATH}}|$(INSTALL_DIR)/$(BINARY_NAME)|g" $(SERVICE_TEMPLATE) > $(SERVICE_FILE)
+	cp $(SERVICE_FILE) $(USER_SERVICE_DIR)/cue.service
+	systemctl --user daemon-reload
+	systemctl --user enable cue
+	systemctl --user start cue
+	@echo "Service installed and started!"
+	@echo ""
+
+# Setup Everything
+setup: build install init service
+	@echo "Setup completed! You can now run 'cue' from anywhere."
+	@echo ""
+
+# Clean Everything
+clean:
+	@echo "Cleaning up..."
 	rm -rf $(BINARY_NAME)
-	sudo rm -rf /usr/local/bin/$(BINARY_NAME)
-	rm -rf $(CONFIG_DIR)
+	sudo rm -f $(INSTALL_DIR)/$(BINARY_NAME)
+	rm -rf $(CONFIG_DIR_LINUX)
+	rm -rf $(CONFIG_DIR_WINDOWS)
 	systemctl --user stop cue
 	systemctl --user disable cue
-	sudo rm $(HOME)/.config/systemd/user/$(BINARY_NAME).service
+	sudo rm -f $(USER_SERVICE_DIR)/$(BINARY_NAME).service
 	systemctl --user daemon-reload
+	@echo "Cleanup complete."
+	@echo ""

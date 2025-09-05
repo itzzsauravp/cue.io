@@ -1,0 +1,9 @@
+[Unit]
+Description=cue Reminder Daemon
+
+[Service]
+ExecStart={{BINARY_PATH}} serve
+Restart=always
+
+[Install]
+WantedBy=default.target
