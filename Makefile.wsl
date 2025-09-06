@@ -12,10 +12,29 @@ SERVICE_FILE       := $(PWD)/assets/services/cue.service
 CONSTANT_TEMPATE := $(PWD)/constants/constants.go.in
 CONSTANT_FILE := $(PWD)/constants/constants.go
 
-.PHONY: all build install init setup service clean wsl
+.PHONY: all build install init service clean check_win_user
 
-# for pure linux
-all: setup
+all: check_win_user build install init service 
+
+# Check Windows Username ( and also add config folders )
+check_win_user:
+	@WIN_USERNAME_POWERSHELL=$$(powershell.exe -Command "[Environment]::UserName" | tr -d '\r'); \
+	CONFIG_DIR_WINDOWS="/mnt/c/Users/$$WIN_USERNAME_POWERSHELL/AppData/Roaming/cue"; \
+	sudo mkdir -p "$$CONFIG_DIR_WINDOWS"; \
+	\
+	read -p "Enter your Windows username: " WIN_USER_INPUT; \
+	if [ "$$WIN_USER_INPUT" != "$$WIN_USERNAME_POWERSHELL" ]; then \
+		echo "Error: Input username ($$WIN_USER_INPUT) does not match detected username ($$WIN_USERNAME_POWERSHELL)"; \
+		exit 1; \
+	else \
+		echo "Windows username verified: $$WIN_USER_INPUT"; \
+		echo "Windows username detected: $$WIN_USERNAME_POWERSHELL"; \
+		sed "s|{{USERNAME}}|$$WIN_USERNAME_POWERSHELL|g" $(CONSTANT_TEMPATE) > $(CONSTANT_FILE); \
+		sudo mkdir -p "$$CONFIG_DIR_WINDOWS"; \
+		cp -a $(PWD)/assets/defaults/$(IMAGE_WINDOWS) "$$CONFIG_DIR_WINDOWS/$(IMAGE_WINDOWS)"; \
+		echo "Initialized Windows config at $$CONFIG_DIR_WINDOWS"; \
+	fi
+
 
 # Build the Go Binary
 build: 
@@ -52,11 +71,6 @@ service:
 	systemctl --user enable cue
 	systemctl --user start cue
 	@echo "Service installed and started!"
-	@echo ""
-
-# Setup Everything
-setup: build install init service
-	@echo "Setup completed! You can now run 'cue' from anywhere."
 	@echo ""
 
 # Clean Everything

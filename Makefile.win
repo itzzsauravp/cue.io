@@ -1,0 +1,42 @@
+BINARY_NAME   := cue
+BUILD_DIR     := .
+APPDATA_DIR   := $(APPDATA)/cue
+BIN_DIR       := $(APPDATA_DIR)/bin
+ASSETS_DIR    := $(APPDATA_DIR)/assets
+DEFAULT_FILE  := reminders.json
+IMAGE_WINDOWS := CUE.png
+
+.PHONY: all build install init clean
+
+# Default target
+all: build install init
+
+# Build the Windows executable
+build:
+	@echo "Building $(BINARY_NAME).exe for Windows..."
+	GOOS=windows GOARCH=amd64 go build -o $(BINARY_NAME).exe $(BUILD_DIR)/main.go
+	@echo "Build complete: $(BINARY_NAME).exe"
+	@echo ""
+
+# Install the binary and assets to AppData
+install:
+	@echo "Installing $(BINARY_NAME).exe to AppData..."
+	@mkdir -p "$(BIN_DIR)"
+	@mkdir -p "$(ASSETS_DIR)"
+	@copy /Y "$(BINARY_NAME).exe" "$(BIN_DIR)\$(BINARY_NAME).exe" > nul
+	@copy /Y "assets\defaults\$(IMAGE_WINDOWS)" "$(ASSETS_DIR)\$(IMAGE_WINDOWS)" > nul
+	@copy /Y "assets\defaults\$(DEFAULT_FILE)" "$(ASSETS_DIR)\$(DEFAULT_FILE)" > nul
+	@echo "Installed to $(APPDATA_DIR)"
+	@echo ""
+
+# Initialize configuration (if needed)
+init:
+	@echo "Initialization complete. You can add '$(BIN_DIR)' to your PATH manually."
+	@echo ""
+
+# Clean Windows build
+clean:
+	@echo "Cleaning Windows build..."
+	@del /Q "$(BINARY_NAME).exe" 2> nul || true
+	@rd /S /Q "$(APPDATA_DIR)" 2> nul || true
+	@echo "Clean complete."
